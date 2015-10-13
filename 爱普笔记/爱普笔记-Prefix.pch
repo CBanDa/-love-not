@@ -14,3 +14,7 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+#ifndef version_iOS7
+#define Version_iOS7 [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0 ? YES : NO
+#endif

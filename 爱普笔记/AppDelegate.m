@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "MainViewController.h"
+#import "HomeViewController.h"
 
 @implementation AppDelegate
 
@@ -14,9 +16,40 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+    
+    BOOL check = [[NSUserDefaults standardUserDefaults] boolForKey:@"firstTime"];
+    if (check == NO){
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstTime"];
+        [NSUserDefaults resetStandardUserDefaults];
+        MainViewController *main = [[MainViewController alloc]init];
+        self.window.rootViewController =main;
+    }else{
+        HomeViewController *home = [[HomeViewController alloc]init];
+        UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:home];
+        self.window.rootViewController = nav;
+    }
+    
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+// 程序接受本地消息
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    
+    UIApplicationState state = application.applicationState;
+    
+    if (state == UIApplicationStateActive) {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:notification.alertAction message:notification.alertBody delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        
+        [alert show];
+        
+        if (application.applicationIconBadgeNumber > 0) {
+            
+            application.applicationIconBadgeNumber -= 1;
+            
+        }
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
